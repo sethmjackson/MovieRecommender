@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<title>Movie Recommender</title>
+<body>
+<div>
+    <datalist id="suggestions">
+        {% for movie in movie_list %}
+        <option>{{ movie }}</option>
+        {% endfor %}
+    </datalist>
+    <input  autoComplete="on" list="suggestions"/>
+
+
+</div>
+<div id="MovieList"></div>
+</body>
+</html>
