@@ -3,8 +3,9 @@ import Modules.Util as ut
 ## initialize data
 
 def preprocessMovieData(df: pd.DataFrame):
-    df = df[df['id'].str.isnumeric() == True]
+    #df = df[df['id'].str.isnumeric() == True]
     df['id'] = df['id'].astype('int')
+    print(df['title'].value_counts())
 
     ut.convertColumns(df.dropna(), ['revenue', 'budget'], int)
     df['profit'] = df['revenue'] - df['budget']

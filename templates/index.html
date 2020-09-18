@@ -8,10 +8,16 @@
         <option>{{ movie }}</option>
         {% endfor %}
     </datalist>
-    <input  autoComplete="on" list="suggestions"/>
 
+<form method="POST">
+    {% csrf_token %}
+    <input  autoComplete="on" list="suggestions" size="70" name="selectedMovie"/>
+    <button type="submit">Get Recommended Movies!</button>
+</form>
+</div>
+<div id="MovieList">
+    {{recommended_moviesHTML|safe}}
 
 </div>
-<div id="MovieList"></div>
 </body>
 </html>

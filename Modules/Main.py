@@ -6,7 +6,7 @@ import Modules.Util as ut
 import Modules.Plots as plots
 import pickle
 from Modules.SimpleRecommender import getImdbScore
-from Modules.ContentRecommender import getRecommendations, plotRecommender, fullContentRecommender
+from Modules.ContentRecommender import getRecommendationsByTitle, plotRecommender, fullContentRecommender
 
 import django
 ## impute data
