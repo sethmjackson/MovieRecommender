@@ -7,7 +7,13 @@ from Modules.ContentRecommender import fullContentRecommender, getRecommendation
 import Modules.Util as ut
 #from Modules.EDA import *
 movieData = pd.read_csv('Input/movies_metadata.csv')
+movieData = movieData.sample(frac=0.10, random_state=1)
+movieData.sort_values(by='title', inplace=True)
+movieData.reset_index(inplace=True, drop=True)
+
+#movieData.to_csv('Input/movies_metadata.csv')
 movie_list = list(movieData['title'])
+
 movie_list.sort()
 moviestoDisplay = 10
 debug = True
@@ -41,13 +47,14 @@ def home_view(request):
 def displayMovies(df, selectedMovie: str):
 
     if generateDF:
-        movieList = fullContentRecommender(df, selectedMovie, moviestoDisplay)
+        movieList = fullContentRecommender(df, selectedMovie, moviestoDisplay, skipProcessing=True)
     else:
         movieList = ut.unpickleObject('Output/Cosine_Sim.pkl')
-        #getRecommendationsAsColumn(df, movieList)
-        getRecommendationsByTitle(df, 'Heat', movieList)
+        #movieList = 'abc'
+        df = getRecommendationsAsColumn(df, movieList)
+        #getRecommendationsByTitle(df, 'Heat', movieList)
 
-    #heat
+
     movies = df[df['title'].isin(movieList)]
     movieHTML = ""
     baseUrl = 'https://image.tmdb.org/t/p/original/'
@@ -60,7 +67,7 @@ def displayMovies(df, selectedMovie: str):
 
 def processMovie(df: pd.DataFrame, movie, movieCount):
     movieHTML = ''
-    posterLink = movie['poster_path']
+    posterLink = df[df['title'] == movie]['poster_path']
     movieHTML += '<img src= "' + posterLink + '" width="33%"'
 
 

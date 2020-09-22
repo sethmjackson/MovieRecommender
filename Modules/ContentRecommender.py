@@ -8,8 +8,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import Modules.Util as ut
 
-def getIndexFromTitle(df: pd.DataFrame):
-    return pd.Series(df.index, index=df['title']).drop_duplicates()
+def getIndexFromTitle(df: pd.DataFrame, title: str):
+    titles = df[df['title'] == title]
+    titles = pd.Series(titles.index, index=titles['title'])
+    index = titles[0]
+    return index
 
 
 def plotRecommender(df: pd.DataFrame, title: str):
@@ -28,12 +31,10 @@ def plotRecommender(df: pd.DataFrame, title: str):
 
 def getRecommendationsByTitle(df: pd.DataFrame, title, cosine_sim, recommendationsNum=10):
     print('in getRecommendations')
-    index = getIndexFromTitle(df)[title]
+    index = getIndexFromTitle(df, title)
     similarityScores = list(enumerate(cosine_sim[index]))
 
     recommendationsNum+=1
-    if title == 'Heat':
-        print(title)
     similarityScores = sorted(similarityScores, key=lambda x: x[1], reverse=True)
     similarityScores = similarityScores[1:recommendationsNum]
     movieIndexes = [i[0] for i in similarityScores]
@@ -41,7 +42,7 @@ def getRecommendationsByTitle(df: pd.DataFrame, title, cosine_sim, recommendatio
 
 def getRecommendationsAsColumn(df: pd.DataFrame, cosine_sim, recommendationsNum=10):
     df['similarMovies'] = df.apply(lambda row: getRecommendationsByTitle(df, row['title'], cosine_sim, recommendationsNum), axis=1)
-
+    return df
 
 def extractFeatures(df: pd.DataFrame):
     print('in extractFeatures')
@@ -78,27 +79,29 @@ def removeSpaces(metadataList):
 def stirSoup(movieDataRow):
         return ' '.join(movieDataRow['keywords']) + ' ' + ' '.join(movieDataRow['cast']) + ' ' + movieDataRow['director'] + ' ' + ' '.join(movieDataRow['genres'])
 
-def fullContentRecommender(df: pd.DataFrame, title, recommendationsNum=10):
+def fullContentRecommender(df: pd.DataFrame, title, recommendationsNum=10, skipProcessing=False):
     print('in fullContentRecommender')
     extractFeatures(df)
     df['director'] = df['crew'].apply(getDirector)
 
-    features = ['cast', 'keywords', 'genres']
-    for feature in features:
-        df[feature] = df[feature].apply(get_list)
+    if skipProcessing==False:
+        features = ['cast', 'keywords', 'genres']
+        for feature in features:
+            df[feature] = df[feature].apply(get_list)
 
-    features.append('director')
-    for feature in features:
-        df[feature] = df[feature].apply(removeSpaces)
+        features.append('director')
+        for feature in features:
+            df[feature] = df[feature].apply(removeSpaces)
 
-    df['soup'] = df.apply(stirSoup, axis=1)
+        df['soup'] = df.apply(stirSoup, axis=1)
+        df.to_csv('Input/movies_metadata.csv')
 
     print('before vectorizer')
     count = CountVectorizer(stop_words='english')
     count_matrix = count.fit_transform(df['soup'])
     contentCosineSim = cosine_similarity(count_matrix, count_matrix)
-
     ut.pickleObject(contentCosineSim, 'Output/Cosine_Sim.pkl')
+
     print('after vectorizer')
     return getRecommendationsByTitle(df, title, contentCosineSim, recommendationsNum)
 
