@@ -38,10 +38,13 @@ def getRecommendationsByTitle(df: pd.DataFrame, title, cosine_sim, recommendatio
     similarityScores = sorted(similarityScores, key=lambda x: x[1], reverse=True)
     similarityScores = similarityScores[1:recommendationsNum]
     movieIndexes = [i[0] for i in similarityScores]
-    return df['title'].iloc[movieIndexes]
+    #result = df['title'].iloc[movieIndexes]
+    #result = result.tolist()
+    return movieIndexes
 
 def getRecommendationsAsColumn(df: pd.DataFrame, cosine_sim, recommendationsNum=10):
     df['similarMovies'] = df.apply(lambda row: getRecommendationsByTitle(df, row['title'], cosine_sim, recommendationsNum), axis=1)
+    df.to_csv('Input/movies_metadata.csv')
     return df
 
 def extractFeatures(df: pd.DataFrame):
