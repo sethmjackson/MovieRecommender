@@ -1,11 +1,12 @@
 import pandas as pd
 import Modules.Util as ut
+from Modules.SimpleRecommender import getImdbScore
 ## initialize data
 
 def preprocessMovieData(df: pd.DataFrame):
     df = df[df['id'].str.isnumeric() == True]
     df['id'] = df['id'].astype('int')
-    print(df['title'].value_counts())
+    #print(df['title'].value_counts())
 
     ut.convertColumns(df.dropna(), ['revenue', 'budget'], int)
     #df['profit'] = df['revenue'] - df['budget']
@@ -16,7 +17,8 @@ def preprocessMovieData(df: pd.DataFrame):
 
 movieData = pd.read_csv('Input/movies_metadata (original).csv')
 movieData = movieData.drop(columns=['original_title', 'belongs_to_collection', 'homepage', 'spoken_languages'])
-movieData['imdb_score'] = 0
+movieData = getImdbScore(movieData)
+
 movieData = movieData[['id', 'imdb_id', 'imdb_score', 'title',
                         'release_date', 'budget', 'revenue', 'runtime', 'vote_count', 'vote_average',
                         'popularity', 'status', 'adult',  'video', 'original_language',
