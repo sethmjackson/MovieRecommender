@@ -1,7 +1,27 @@
 <!DOCTYPE html>
 <html>
+{% load static %}
 <title>Movie Recommender</title>
+
+<style>
+        .infoDiv {
+        background-color: rgba(255, 0, 0, 0.6);
+        font-Size: x-large;
+    }
+            body {
+        background: url("{%  static 'MovieTheater.jpg' %}") no-repeat center fixed;
+        background-size: cover;
+    }
+</style>
+
 <body>
+<div class ="infoDiv">
+    <span>This application takes a movie selected by the user and uses a content based recommendation system to recommend other movies.</span>
+    <br>
+    <span>Posters of recommended movies are displayed, and clicking on them opens the imdb page of that movie.</span>
+
+</div>
+<br>
 <div>
     <datalist id="suggestions">
         {% for movie in movie_list %}
@@ -11,8 +31,9 @@
 
 <form method="POST">
     {% csrf_token %}
-    <input  autoComplete="on" list="suggestions" size="70" name="selectedMovie"/>
-    <button type="submit">Get Recommended Movies!</button>
+    <input  autoComplete="on" list="suggestions" size="70" name="selectedMovie" value={{ movieValue }}>
+    <button type="submit" name="selectMovie">Get Recommended Movies!</button>
+    <button type="submit" name="randomMovie">Surprise Me!</button>
 </form>
 </div>
 <br>
