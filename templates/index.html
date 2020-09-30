@@ -31,7 +31,7 @@
 
 <form method="POST">
     {% csrf_token %}
-    <input  autoComplete="on" list="suggestions" size="70" name="selectedMovie" value={{ movieValue }}>
+    <input  autoComplete="on" list="suggestions" size="70" name="selectedMovie" value="{{ movieValue }}">
     <button type="submit" name="selectMovie">Get Recommended Movies!</button>
     <button type="submit" name="randomMovie">Surprise Me!</button>
 </form>

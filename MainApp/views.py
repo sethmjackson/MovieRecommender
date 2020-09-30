@@ -31,7 +31,7 @@ def home_view(request):
         else:
             chosenMovie = random.choice(movie_list)
             #movieValue = chosenMovie
-            movieValue = 'The Chain Reaction'
+            movieValue = chosenMovie
             print('movieValue: ' + movieValue)
 
 
