@@ -19,10 +19,13 @@
     <span>This application takes a movie selected by the user and uses a content based recommendation system to recommend other movies.</span>
     <br>
     <span>Posters of recommended movies are displayed, and clicking on them opens the imdb page of that movie.</span>
-
+    <br>
+    <span>The source code for this application can be found <a href="https://github.com/sethmjackson/MovieRecommender">here.</a></span>
+    <br>
+    <span>Details about the recommendation system can be found <a href="https://github.com/sethmjackson/MovieRecommender">here.</a></span>
 </div>
 <br>
-<div>
+<div align="center">
     <datalist id="suggestions">
         {% for movie in movie_list %}
         <option>{{ movie }}</option>
@@ -39,7 +42,6 @@
 <br>
 <div id="MovieList">
     {{recommended_moviesHTML|safe}}
-
 </div>
 </body>
 </html>
