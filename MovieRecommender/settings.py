@@ -27,11 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = False
 DEBUG_PROPAGATE_EXCEPTIONS = True
 ALLOWED_HOSTS = [
-    '0.0.0.0',
-    '127.0.0.1',
-    '[::1]',
-    '.localhost',
-    'django-site.herokuapp.com',
+    '.herokuapp.com',
 ]
 
 
