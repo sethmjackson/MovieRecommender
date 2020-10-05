@@ -86,7 +86,7 @@ def displayMovies(df, selectedMovie: str):
 
     #movieList = movieList[0:moviestoDisplay]
     movies = df.iloc[movieList]
-    movies.sort_values(by = 'imdb_score')
+    #movies.sort_values(by = 'imdb_score')
 
 
     totalMovieHTML = ""
