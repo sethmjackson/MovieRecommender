@@ -128,7 +128,7 @@ def processMovie(df: pd.DataFrame, movie, movieCount):
     homepageExists = homepage != None and homepage != ""
     if homepageExists:
         movieHTML+= '<a href="' + homepage + '">'
-    movieHTML += '<img src= "' + fullUrl + '" width="33%"  alt="' + movie['title'] + ' Poster Here">'
+    movieHTML += '<img src= "' + fullUrl + '" width="33%" height="500px" alt="' + movie['title'] + ' Poster Here">'
 
     if homepageExists:
         movieHTML += '</a>'

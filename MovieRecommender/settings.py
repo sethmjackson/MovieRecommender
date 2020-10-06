@@ -28,6 +28,7 @@ DEBUG = False
 DEBUG_PROPAGATE_EXCEPTIONS = True
 ALLOWED_HOSTS = [
     '.herokuapp.com',
+    '127.0.0.1',
 ]
 
 
