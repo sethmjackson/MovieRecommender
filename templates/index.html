@@ -4,21 +4,28 @@
 <title>Movie Recommender</title>
 
 <style>
-        .infoDiv {
-        background-color: rgba(255, 0, 0, 0.6);
+       .infoDiv {
+        /*background-color: rgba(255, 0, 0, 0.6);*/
         font-Size: x-large;
     }
             body {
         background: url("{%  static 'MovieTheater.jpg' %}") no-repeat center fixed;
         background-size: cover;
     }
+            span{
+                margin-left: 15%
+            }
+            img{
+                padding-bottom: 5px;
+                padding-left: 5px;
+            }
 </style>
 
 <body>
 <div class ="infoDiv">
-    <span>This application takes a movie selected by the user and uses a content based recommendation system to recommend other movies.</span>
+    <span>This application takes a movie and uses a content based recommendation system to recommend other movies.</span>
     <br>
-    <span>Posters of recommended movies are displayed, and clicking on them opens the imdb page of that movie.</span>
+    <span>Posters of recommended movies are displayed, and clicking on them opens the TMDB page of that movie.</span>
     <br>
     <span>The source code for this application can be found <a href="https://github.com/sethmjackson/MovieRecommender">here.</a></span>
     <br>

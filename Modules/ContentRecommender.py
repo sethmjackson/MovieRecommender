@@ -8,10 +8,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import Modules.Util as ut
 
-def getIndexFromTitle(df: pd.DataFrame, title: str):
-    titles = df[df['title'] == title]
-    titles = pd.Series(titles.index, index=titles['title'])
-    index = titles[0]
+def getIndexFromTitle(df: pd.DataFrame, title):
+    if isinstance(title, str):
+        titles = df[df['title'] == title]
+        titles = pd.Series(titles.index, index=titles['title'])
+        index = titles[0]
+    else:
+        index = title
     return index
 
 
@@ -29,23 +32,24 @@ def plotRecommender(df: pd.DataFrame, title: str):
     return getRecommendationsByTitle(df, title, cosine_sim)
 
 
-def getRecommendationsByTitle(df: pd.DataFrame, title, cosine_sim, recommendationsNum=10):
-    print('Getting recommendations for: ' + title)
-    index = getIndexFromTitle(df, title)
+def getRecommendationsByTitle(df: pd.DataFrame, title, cosine_sim, recommendationsNum=20, index=-1):
+
+    if index < 0:
+        index = getIndexFromTitle(df, title)
+    print('Getting recommendations for index ' + str(index)+': ' + title)
     similarityScores = list(enumerate(cosine_sim[index]))
 
-    recommendationsNum+=1
+    recommendationsNum += 1
     similarityScores = sorted(similarityScores, key=lambda x: x[1], reverse=True)
     similarityScores = similarityScores[1:recommendationsNum]
-    movieIndexes = [i[0] for i in similarityScores]
-    result = df['title'].iloc[movieIndexes]
-    result = result.tolist()
-    return movieIndexes
+    movieIndexes     = [i[0] for i in similarityScores]
+    scores           = [i[1] for i in similarityScores]
 
-def getRecommendationsAsColumn(df: pd.DataFrame, cosine_sim, recommendationsNum=10):
-    df['similarMovies'] = df.apply(lambda row: getRecommendationsByTitle(df, row['title'], cosine_sim, recommendationsNum), axis=1)
-    df.to_csv('Input/movies_metadata.csv', index=False)
-    return df
+
+    #result = df['title'].iloc[movieIndexes]
+    #result = result.tolist()
+    result = dict(zip(movieIndexes, scores))
+    return result
 
 def extractFeatures(df: pd.DataFrame):
     print('in extractFeatures')
@@ -82,7 +86,7 @@ def removeSpaces(metadataList):
 def stirSoup(movieDataRow):
         return ' '.join(movieDataRow['keywords']) + ' ' + ' '.join(movieDataRow['cast']) + ' ' + movieDataRow['director'] + ' ' + ' '.join(movieDataRow['genres'])
 
-def fullContentRecommender(df: pd.DataFrame, title, recommendationsNum=10):
+def fullContentRecommender(df: pd.DataFrame):
     print('in fullContentRecommender')
     extractFeatures(df)
     df['director'] = df['crew'].apply(getDirector)
@@ -106,8 +110,7 @@ def fullContentRecommender(df: pd.DataFrame, title, recommendationsNum=10):
 
     features.append('soup')
     df.drop(columns=features, inplace=True)
-    df.to_csv('Input/movies_metadata.csv', index=False)
 
     print('after vectorizer')
-    return getRecommendationsByTitle(df, title, contentCosineSim, recommendationsNum)
+    return contentCosineSim
 

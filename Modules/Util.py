@@ -297,3 +297,9 @@ def appendColumns(columnList):
 
 def getColumnDiff(df1: pd.DataFrame, df2: pd.DataFrame):
     return [value for value in df1.columns if value not in df2.columns]
+
+def dropIfExists(df: pd.DataFrame, columns: List[str], inplace: bool):
+    for column in columns:
+        if column in df.columns:
+            df.drop(columns=column, inplace=inplace)
+            print(column + ' column dropped')
