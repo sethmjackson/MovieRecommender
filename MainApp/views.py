@@ -1,14 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 import pandas as pd
-from typing import List
 from django.template import loader
-from Modules.ContentRecommender import fullContentRecommender, getRecommendationsByTitle
 import Modules.Util as ut
 from Modules.DfManip import *
 from Modules.Tmdb import getMovieInfo
 import random
-import numpy as np
+
 
 generateDF = False
 generateCosineSims = False
@@ -17,12 +15,14 @@ if generateDF:
 else:
     movieData = readDF()
 
+
 #print(movieData['adult'].value_counts())
 movieData = movieData[movieData['adult'] == False]
 #print(movieData['adult'].value_counts())
 movie_list = processTitles(movieData)
 moviestoDisplay = 6
 
+#plotSimilarityScores(movieData)
 
 def home_view(request):
     template = loader.get_template('index.html')
@@ -77,12 +77,12 @@ def displayMovies(df, selectedMovie: str):
     movieList = movieList.iloc[0]
     movieList = stringToDict(movieList)
 
-    #movieList = movieList[0:moviestoDisplay]
-    #movies = df.loc[df['tmdb_id'].isin( list(movieList.keys()))]
     movies = df.iloc[list(movieList.keys())]
     movies = movies.sort_values(by='imdb_score', ascending=False)
     totalMovieHTML = ""
     movieCount = 1
+    similarityScores = list(movieList.values())
+    imdbScores = list(movies['imdb_score'])
 
     for index, row in movies.iterrows():
         if movieCount > moviestoDisplay:
@@ -93,6 +93,8 @@ def displayMovies(df, selectedMovie: str):
         if currentMovieHTML is None:
             continue
         totalMovieHTML += currentMovieHTML
+        if movieCount % 3 == 0 and movieCount > 0:
+            totalMovieHTML+= assembleScoreHTML(similarityScores, imdbScores, movieCount-3)
         movieCount += 1
     return totalMovieHTML
 
@@ -112,7 +114,7 @@ def processMovie(df: pd.DataFrame, movie, movieCount):
     homepageExists = homepage != None and homepage != ""
     if homepageExists:
         movieHTML+= '<a href="' + homepage + '">'
-    movieHTML += '<img src= "' + fullUrl + '" width="33%" height="70%" alt="' + movie['title'] + ' Poster Here">'
+    movieHTML += '<img src= "' + fullUrl + '" width="33%" height="600px" alt="' + movie['title'] + ' Poster Here">'
 
     if homepageExists:
         movieHTML += '</a>'
@@ -120,5 +122,25 @@ def processMovie(df: pd.DataFrame, movie, movieCount):
     print(movie['title'] + ' url: ' + fullUrl)
     if movieCount % 3 == 0:
         movieHTML+='<br>'
+
+
     return movieHTML
 
+def assembleScoreHTML(similarityScores, imdbScores, index: int):
+    scoreHTML = []
+    scoreHTML.append('<div class=row> <div  class=column>')
+    scoreHTML.append('<span> Similarity Score: ' + str(int(similarityScores[index]*100)) + '%</span>')
+    scoreHTML.append('<br><span>IMDB Score: ' + str(ut.roundTraditional(imdbScores[index], 2)) + '</span></div>')
+    index+=1
+
+    scoreHTML.append('<div class=row> <div  class=column>')
+    scoreHTML.append('<span> Similarity Score: ' + str(int(similarityScores[index]*100)) + '%</span>')
+    scoreHTML.append('<br><span>IMDB Score: ' + str(ut.roundTraditional(imdbScores[index], 2)) + '</span></div>')
+    index+=1
+    scoreHTML.append('<div class=row> <div  class=column>')
+    scoreHTML.append('<span> Similarity Score: ' + str(int(similarityScores[index]*100)) + '%</span>')
+    scoreHTML.append('<br><span>IMDB Score: ' + str(ut.roundTraditional(imdbScores[index], 2)) + '</span></div>')
+    scoreHTML.append('</div>')
+
+    scoreHTMLstring = ''.join(scoreHTML)
+    return scoreHTMLstring

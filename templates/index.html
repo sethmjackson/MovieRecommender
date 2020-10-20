@@ -2,34 +2,50 @@
 <html>
 {% load static %}
 <title>Movie Recommender</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
        .infoDiv {
         /*background-color: rgba(255, 0, 0, 0.6);*/
         font-Size: x-large;
     }
-            body {
+        body {
         background: url("{%  static 'MovieTheater.jpg' %}") no-repeat center fixed;
         background-size: cover;
-    }
-            span{
-                margin-left: 15%
-            }
-            img{
-                padding-bottom: 5px;
-                padding-left: 5px;
-            }
+        }
+
+        .introSpan{
+        margin-left: 15%
+        }
+
+        .column {
+        float: left;
+        width: 33%;
+        background-color: rgba(0, 204, 255, 0.6);
+        font-size: xx-large;
+        }
+
+        p{
+        background-color: rgba(0, 204, 255, 0.6);
+        font-size: xx-large;
+        }
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 </style>
 
 <body>
 <div class ="infoDiv">
-    <span>This application takes a movie and uses a content based recommendation system to recommend other movies.</span>
+    <span class="introSpan">This application takes a movie and uses a content based recommendation system to recommend other movies.</span>
     <br>
-    <span>Posters of recommended movies are displayed, and clicking on them opens the TMDB page of that movie.</span>
+    <span class="introSpan">Posters of recommended movies are displayed, and clicking on them opens the TMDB page of that movie.</span>
     <br>
-    <span>The source code for this application can be found <a href="https://github.com/sethmjackson/MovieRecommender">here.</a></span>
+    <span class="introSpan">The source code for this application can be found <a href="https://github.com/sethmjackson/MovieRecommender">here.</a></span>
     <br>
-    <span>Details about the recommendation system can be found <a href="https://nycdatascience.com/blog/?p=67442">here.</a></span>
+    <span class="introSpan">Details about the recommendation system can be found <a href="https://nycdatascience.com/blog/?p=67442">here.</a></span>
 </div>
 <br>
 <div align="center">

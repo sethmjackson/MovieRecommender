@@ -303,3 +303,16 @@ def dropIfExists(df: pd.DataFrame, columns: List[str], inplace: bool):
         if column in df.columns:
             df.drop(columns=column, inplace=inplace)
             print(column + ' column dropped')
+
+
+def stringToList(s: str):
+    result = s[1:-1]
+    result = result.split(',')
+    result = [int(s) for s in result]
+    return result
+
+def stringToDict(s: str):
+    result = s[1:-1]
+    result = result.split(',')
+    result = {int(s.split(':')[0]): float(s.split(':')[1]) for s in result}
+    return result

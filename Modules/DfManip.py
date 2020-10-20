@@ -1,7 +1,9 @@
 import pandas as pd
 import Modules.Util as ut
+from matplotlib import pyplot as plt
 from Modules.ContentRecommender import fullContentRecommender, getRecommendationsByTitle
-
+import matplotlib as mpl
+import matplotlib.ticker as mtick
 
 def readDF(fileName = 'Output/movies_metadata.csv'):
     df = pd.read_csv(fileName)
@@ -88,3 +90,51 @@ def getRecommendationsAsColumn(df: pd.DataFrame, cosine_sim, recommendationsNum=
             saveDF(df)
             print('last index saved is: ', str(index))
     saveDF(df)
+
+def plotSimilarityScores(df: pd.DataFrame):
+    movieList = df['similarMovies']
+    movieList = movieList.apply(lambda x: ut.stringToDict(x))
+    df['scoreRange'] = movieList.apply(lambda x: max(x.values()) - min(x.values()))
+    df['scoreAverage'] = movieList.apply(lambda x: sum(x.values()) / len(x.values()))
+
+    histDir = 'Output/Histograms/'
+    scatterDir = 'Output/Scatterplots/'
+    barDir = 'Output/Barplots/'
+
+    histParams = {'kind': 'hist', 'legend': False, 'bins': 50}
+    barParams = {'kind': 'bar', 'legend': False}
+    figParams = {'x': 7, 'y': 7}
+
+    plt.rc('font', size=40)
+    plt.rc('axes', labelsize=60)
+    plt.rc('axes', titlesize=60)
+    xTickMult = lambda: ut.multiplyRange(plt.xticks()[0], 0.5)
+    xTickMultLS = lambda: ut.multiplyLinSpace(plt.xticks()[0], 2)
+    yTickFormat = lambda: plt.gca().yaxis.set_major_formatter(plt.FormatStrFormatter('%.0f'))
+    xTickFormatPercent = lambda: plt.gca().xaxis.set_major_formatter(mtick.PercentFormatter(decimals=0))
+    xTickFormatCommas = lambda: plt.gca().xaxis.set_major_formatter(mpl.ticker.StrMethodFormatter('{x:,.0f}'))
+    xTickFormatDollars = lambda x=0: plt.gca().xaxis.set_major_formatter(
+    mpl.ticker.StrMethodFormatter('${x:,.' + str(x) + 'f}'))
+    # setTickIn = lambda: plt.gca().tick_params(axis='x', direction='in')
+    trimTicks = lambda: plt.xticks()[0:-1]
+    histParams = {'kind': 'hist', 'legend': False, 'bins': 100}
+
+    ut.plotDF(df[['scoreRange']], histParams,
+           {
+            'grid': None,
+            'xlabel': 'Range Between Highest and Lowest Similarity Scores',
+            'title': 'Histogram of Similarity Score Ranges',
+            'savefig': histDir + 'ScoreRange.png'})
+
+    ut.plotDF(df[['scoreAverage']], histParams,
+           {
+            'grid': None,
+            'xlabel': 'Average Similarity Scores',
+            'title': 'Histogram of Similarity Score Averages',
+            'savefig': histDir + 'ScoreAverages.png'})
+
+    print('finished plotting')
+
+
+
+
