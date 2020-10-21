@@ -17,24 +17,18 @@
         margin-left: 15%
         }
 
+        /* Clear floats after the columns */
+        .row:after {
+          content: "";
+          display: table;
+          clear: both;
+        }
         .column {
         float: left;
         width: 33%;
-        background-color: rgba(0, 204, 255, 0.6);
+        background-color: rgba(0, 204, 255, 1.0);
         font-size: xx-large;
         }
-
-        p{
-        background-color: rgba(0, 204, 255, 0.6);
-        font-size: xx-large;
-        }
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
 </style>
 
 <body>
