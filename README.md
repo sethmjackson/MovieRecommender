@@ -25,7 +25,6 @@ The Movie Database, also known as [TMDB](https://www.themoviedb.org/), is a data
 [Heroku](https://www.heroku.com/) is a service that allows web applications from many languages to be deployed to a server for free. Heroku supports Django, and has Github integration, consequently each push onto the associated Github project will recompile the app and deploy it within minutes. There are some extra steps that need to be taken so that the Heroku server can install and run the libraries used in the application, but once it worked, it performed really well. A link to the Heroku server hosting the application can be found [here](https://django-movie-recommender.herokuapp.com/).
 
 ## Conclusion
-
 It is difficult to determine the effectiveness of a recommendation system, especially without data from active users. To find some measure to evaluate, I plotted some data related to the similarity scores.
 
 ![Score Range](https://github.com/sethmjackson/MovieRecommender/blob/master/Output/Histograms/ScoreRange.png)
